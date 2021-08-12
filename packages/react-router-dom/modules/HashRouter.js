@@ -8,9 +8,11 @@ import warning from "tiny-warning";
  * The public API for a <Router> that uses window.location.hash.
  */
 class HashRouter extends React.Component {
+  // 调用createHashHistory 创建history对象
   history = createHistory(this.props);
 
   render() {
+    // 然后传入到Router组件
     return <Router history={this.history} children={this.props.children} />;
   }
 }

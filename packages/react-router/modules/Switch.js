@@ -9,6 +9,7 @@ import matchPath from "./matchPath.js";
 /**
  * The public API for rendering the first <Route> that matches.
  */
+// 用来做匹配第一个Route用的
 class Switch extends React.Component {
   render() {
     return (
@@ -24,7 +25,9 @@ class Switch extends React.Component {
           // here because toArray adds keys to all child elements and we do not want
           // to trigger an unmount/remount for two <Route>s that render the same
           // component at different URLs.
+          // 按顺序遍历匹配
           React.Children.forEach(this.props.children, child => {
+            // 如果还没匹配到才继续做匹配
             if (match == null && React.isValidElement(child)) {
               element = child;
 
@@ -36,6 +39,7 @@ class Switch extends React.Component {
             }
           });
 
+          // 返回匹配到的那个Route组件，并把match通过computedMatch的props传给Route，让Route拿到不用再计算，也能够知道是被Switch包裹了
           return match
             ? React.cloneElement(element, { location, computedMatch: match })
             : null;

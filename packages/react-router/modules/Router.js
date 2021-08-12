@@ -8,8 +8,13 @@ import RouterContext from "./RouterContext.js";
 /**
  * The public API for putting history on context.
  */
+// 提供一个RouterContext 然后把history location等一些东西挂载上去 让后面它包裹的子组件能够用
+// 可以看到，Router会接受一个history对象，而这个history对象就是createBrowserHistory或者createHashHistory来的，但是这个创建的动作是在react-router-dom中去实现的
+// 这里又有一个智慧 组件的拆分 这么一拆 react-router可以根据不同的history传入做很大程度的复用了
+// 例如MemeoryRouter BrowserRouter HashRouter的实现 就是对应三种history的传入
 class Router extends React.Component {
   static computeRootMatch(pathname) {
+    // react-router扩展的match props参数
     return { path: "/", url: "/", params: {}, isExact: pathname === "/" };
   }
 
@@ -29,6 +34,7 @@ class Router extends React.Component {
     this._pendingLocation = null;
 
     if (!props.staticContext) {
+      // 改变的时候 重新setState location 这就触发更新了 其实这就是最核心的原理...
       this.unlisten = props.history.listen(location => {
         if (this._isMounted) {
           this.setState({ location });

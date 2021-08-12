@@ -35,12 +35,14 @@ class Route extends React.Component {
           invariant(context, "You should not use <Route> outside a <Router>");
 
           const location = this.props.location || context.location;
+          // computedMatch是Switch组件会传递的
           const match = this.props.computedMatch
             ? this.props.computedMatch // <Switch> already computed the match for us
             : this.props.path
             ? matchPath(location.pathname, this.props)
             : context.match;
 
+          // 拼接
           const props = { ...context, location, match };
 
           let { children, component, render } = this.props;
@@ -51,6 +53,10 @@ class Route extends React.Component {
             children = null;
           }
 
+          // 这一串三元运算符是什么磨人的小妖精
+          // 其实就是根据不同的props按照优先级渲染 当然要先match上了 才有东西 否则渲染null
+          // 这里之所以又是个Provider 是因为Route组件是可以嵌套的
+          // children(可以是renderProps) -> component -> render(props) -> null
           return (
             <RouterContext.Provider value={props}>
               {props.match
@@ -65,7 +71,8 @@ class Route extends React.Component {
                   : render
                   ? render(props)
                   : null
-                : typeof children === "function"
+                : // 没有match 如果children传了函数也会渲染 ！！！
+                typeof children === "function"
                 ? __DEV__
                   ? evalChildrenDev(children, props, this.props.path)
                   : children(props)
