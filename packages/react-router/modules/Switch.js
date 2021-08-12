@@ -27,7 +27,7 @@ class Switch extends React.Component {
           // component at different URLs.
           // 按顺序遍历匹配
           React.Children.forEach(this.props.children, child => {
-            // 如果还没匹配到才继续做匹配
+            // 如果还没匹配到才继续做匹配，匹配上了match就不是null了
             if (match == null && React.isValidElement(child)) {
               element = child;
 
@@ -39,7 +39,8 @@ class Switch extends React.Component {
             }
           });
 
-          // 返回匹配到的那个Route组件，并把match通过computedMatch的props传给Route，让Route拿到不用再计算，也能够知道是被Switch包裹了
+          // 返回匹配到的那个Route组件，并把match通过computedMatch的props传给Route
+          // 让Route拿到不用再计算，也能够知道是被Switch包裹了
           return match
             ? React.cloneElement(element, { location, computedMatch: match })
             : null;
