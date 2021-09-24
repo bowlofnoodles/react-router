@@ -56,6 +56,8 @@ const NavLink = forwardRef(
           const escapedPath =
             path && path.replace(/([.+*?=^!:${}()[\]|/\\])/g, "\\$1");
 
+          // !! 可以看到这中间基本就是根据当前location和这个NavLink的url做比较，如果是当前url，则会是isActive和className等等。。
+          // !! 在算Link组件的className和style属性
           const match = escapedPath
             ? matchPath(currentLocation.pathname, {
                 path: escapedPath,
@@ -88,6 +90,7 @@ const NavLink = forwardRef(
             props.innerRef = innerRef;
           }
 
+          // !! 然后算完之后就把这些赋值给Link组件就行了
           return <Link {...props} />;
         }}
       </RouterContext.Consumer>
@@ -124,3 +127,12 @@ if (__DEV__) {
 }
 
 export default NavLink;
+
+const isActive = (match, location) => {
+  // 自定义isActive行为
+  return Math.floor(Math.random() * 100 + 1) % 2 === 0
+};
+
+<NavLink to="/faq" activeClassName="selected">FAQ</NavLink>
+<NavLink to="/faq" activeStyle={{color: 'red'}}>FAQ</NavLink>
+<NavLink to="/faq" isActive={isActive}>FAQ</NavLink>

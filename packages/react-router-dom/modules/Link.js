@@ -32,6 +32,7 @@ const LinkAnchor = forwardRef(
 
     let props = {
       ...rest,
+      // 拦截点击事件
       onClick: event => {
         try {
           if (onClick) onClick(event);
@@ -46,6 +47,7 @@ const LinkAnchor = forwardRef(
           (!target || target === "_self") && // let browser handle "target=_blank" etc.
           !isModifiedEvent(event) // ignore clicks with modifier keys
         ) {
+          // 调用props.navigate函数
           event.preventDefault();
           navigate();
         }
@@ -98,6 +100,7 @@ const Link = forwardRef(
           const props = {
             ...rest,
             href,
+            // 这个navigate就是a标签的点击事件，可以看到其实就是调用history.push或history.replace
             navigate() {
               const location = resolveToLocation(to, context.location);
               const method = replace ? history.replace : history.push;
